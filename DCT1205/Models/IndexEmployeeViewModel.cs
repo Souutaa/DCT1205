@@ -14,7 +14,7 @@ namespace DCT1205.Models
         public string ImageUrl { get; set; }       
         public DateTime DOB { get; set; }
         public DateTime DateJoined { get; set; }
-        public DateTime Designation { get; set; }
+        public string Designation { get; set; }
         public string Phone { get; set; }
         public string City { get; set; }
         
