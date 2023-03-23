@@ -23,4 +23,8 @@
     <ProjectReference Include="..\DCT1205.Services\DCT1205.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\employees\" />
+  </ItemGroup>
+
 </Project>
