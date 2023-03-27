@@ -33,6 +33,12 @@ namespace DCT1205.Services.implementation
             }                    
         }
 
+        public async Task DeleteEmployee(Employee employee)
+        {
+            _context?.Employee.Remove(employee);
+            await _context.SaveChangesAsync();
+        }
+
         public IEnumerable<Employee> GetAll()
         {
             return _context.Employee.ToList();
@@ -52,7 +58,7 @@ namespace DCT1205.Services.implementation
         public async Task UpdateById(int id)
         {
             var employee = GetById(id);
-           _context.Employee.Add(employee);
+           _context.Employee.Update(employee);
            await _context.SaveChangesAsync();
         }
     }

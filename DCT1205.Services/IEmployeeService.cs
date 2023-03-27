@@ -15,5 +15,8 @@ namespace DCT1205.Services
         Task UpdateAsSync(Employee employee);
         Task UpdateById(int id);
         Task DeleteAsSync(int id);
+        Task DeleteEmployee(Employee employee);
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DCT1205.Entity;
 using DCT1205.Models;
 using DCT1205.Services;
+using DCT1205.Services.implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DCT1205.Controllers
@@ -15,6 +16,7 @@ namespace DCT1205.Controllers
             _employeeService = employeeService;
             _webHostEnvironment = webHostEnvironment;
         }
+
         public IActionResult Index()
         {
             var model = _employeeService.GetAll().Select(employee => new IndexEmployeeViewModel
@@ -118,5 +120,83 @@ namespace DCT1205.Controllers
             };
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            if (id.ToString() == null)
+            {
+                return NotFound();
+            }
+            var model = _employeeService.GetById(id);
+            _employeeService.DeleteEmployee(model);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(DeleteEmployeeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = new Employee
+                {
+                    Id = model.Id,
+                    EmployeeNo = model.EmployeeNo,                   
+                    FullName = model.FullName,                    
+                };
+                _employeeService.DeleteEmployee(employee);
+            }           
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditEmployeeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = new Employee
+                {
+                    Id = model.Id,
+                    EmployeeNo = model.EmployeeNo,
+                    FirstName = model.FirstName,
+                    MiddleName = model.MiddleName,
+                    LastName = model.LastName,
+                    FullName = model.FullName,
+                    Gender = model.Gender,
+                    Email = model.Email,
+                    DOB = model.DOB,
+                    DateJoined = model.DateJoined,
+                    NationalInsuranceNo = model.NationalInsuranceNo,
+                    PaymentMethod = model.PaymentMethod,
+                    StudentLoan = model.StudentLoan,
+                    UnionMember = model.UnionMember,
+                    Address = model.Address,
+                    City = model.City,
+                    Phone = model.Phone,
+                    Postcode = model.Postcode,
+                    Designation = model.Designation,
+                };
+
+                if (model.ImageUrl != null && model.ImageUrl.Length > 0)
+                {
+
+                    var uploadDir = @"images/employees";
+                    var fileName = Path.GetFileNameWithoutExtension(model.ImageUrl.FileName);
+                    var extension = Path.GetExtension(model.ImageUrl.FileName);
+                    var webRootPath = _webHostEnvironment.WebRootPath;
+                    fileName = DateTime.UtcNow.ToString("yymmssfff") + fileName + extension;
+                    var path = Path.Combine(webRootPath, uploadDir, fileName);
+                    await model.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
+                    employee.ImageUrl = "/" + uploadDir + "/" + fileName;
+                    await _employeeService.CreateAsSync(employee);
+                    return RedirectToAction("Index");
+                }
+
+            }
+            return View();
+        }
     }
 }
+
