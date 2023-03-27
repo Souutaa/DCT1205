@@ -15,8 +15,6 @@ namespace DCT1205.Controllers
             _employeeService = employeeService;
             _webHostEnvironment = webHostEnvironment;
         }
-
-        [HttpGet]
         public IActionResult Index()
         {
             var model = _employeeService.GetAll().Select(employee => new IndexEmployeeViewModel
