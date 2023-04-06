@@ -1,7 +1,6 @@
 ﻿using DCT1205.Entity;
 using DCT1205.Models;
 using DCT1205.Services;
-using DCT1205.Services.implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DCT1205.Controllers
@@ -40,8 +39,6 @@ namespace DCT1205.Controllers
             var model = new CreateEmployeeViewModel();
             return View(model);
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -144,11 +141,11 @@ namespace DCT1205.Controllers
                 var employee = new Employee
                 {
                     Id = model.Id,
-                    EmployeeNo = model.EmployeeNo,                   
-                    FullName = model.FullName,                    
+                    EmployeeNo = model.EmployeeNo,
+                    FullName = model.FullName,
                 };
                 _employeeService.DeleteEmployee(employee);
-            }           
+            }
             return View();
         }
 
@@ -192,7 +189,7 @@ namespace DCT1205.Controllers
                     var path = Path.Combine(webRootPath, uploadDir, fileName);
                     await model.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
                     employee.ImageUrl = "/" + uploadDir + "/" + fileName;
-                    await _employeeService.CreateAsSync(employee);
+                    await _employeeService.UpdateAsSync(employee);
                     return RedirectToAction("Index");
                 }
 

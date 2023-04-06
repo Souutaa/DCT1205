@@ -13,6 +13,7 @@
                 <a class="btn btn-xs btn-outline-success float-md-right" asp-action="Create"> New Employee</a>
                 <table class="table table-strip table-dark">
                     <thead>
+                        <tr>
                     <th>Employee No</th>
                     <th>Full Name</th>
                     <th>Gender</th>
@@ -21,8 +22,10 @@
                     <th>City</th>
                     <th>Image</th>
                     <th class="text-warning">Action</th>
+                        </tr>
                     </thead>
                     <tbody>
+                        <tr>
                         @foreach (var item in Model)
                         {
                         <td>@item.EmployeeNo</td>
@@ -46,6 +49,7 @@
                             </a>
                         </td>
                         }
+                        </tr>
                     </tbody>
                 </table>
             </div>
