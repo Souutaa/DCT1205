@@ -123,79 +123,107 @@ namespace DCT1205.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            if (id.ToString() == null)
+            var employee = _employeeService.GetById(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            var model = _employeeService.GetById(id);
-            _employeeService.DeleteEmployee(model);
+            var model = new DeleteEmployeeViewModel
+            {
+                Id = employee.Id,
+                FullName = employee.FullName,
+                EmployeeNo = employee.EmployeeNo
+            };
             return View(model);
         }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(DeleteEmployeeViewModel model)
+        public async Task<IActionResult> Delete(DeleteEmployeeViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee
-                {
-                    Id = model.Id,
-                    EmployeeNo = model.EmployeeNo,
-                    FullName = model.FullName,
-                };
-                _employeeService.DeleteEmployee(employee);
+                await _employeeService.DeleteAsSync(model.Id);
+                return RedirectToAction("Index");
             }
-            return View();
+            return View(model);
         }
 
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var employee = _employeeService.GetById(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            var model = new EditEmployeeViewModel
+            {
+                Id = employee.Id,
+                EmployeeNo = employee.EmployeeNo,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                MiddleName = employee.MiddleName,
+                Phone = employee.Phone,
+                Gender = employee.Gender,
+                DOB = employee.DOB,
+                DateJoined = employee.DateJoined,
+                Designation = employee.Designation,
+                NationalInsuranceNo = employee.NationalInsuranceNo,
+                PaymentMethod = employee.PaymentMethod,
+                StudentLoan = employee.StudentLoan,
+                UnionMember = employee.UnionMember,
+                Email = employee.Email,
+                Address = employee.Address,
+                City = employee.City,
+                Postcode = employee.Postcode
+            };
+
+            return View(model);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditEmployeeViewModel model)
         {
-            if (ModelState.IsValid)
+            var employee = _employeeService.GetById(model.Id);
+            if (employee == null)
             {
-                var employee = new Employee
-                {
-                    Id = model.Id,
-                    EmployeeNo = model.EmployeeNo,
-                    FirstName = model.FirstName,
-                    MiddleName = model.MiddleName,
-                    LastName = model.LastName,
-                    FullName = model.FullName,
-                    Gender = model.Gender,
-                    Email = model.Email,
-                    DOB = model.DOB,
-                    DateJoined = model.DateJoined,
-                    NationalInsuranceNo = model.NationalInsuranceNo,
-                    PaymentMethod = model.PaymentMethod,
-                    StudentLoan = model.StudentLoan,
-                    UnionMember = model.UnionMember,
-                    Address = model.Address,
-                    City = model.City,
-                    Phone = model.Phone,
-                    Postcode = model.Postcode,
-                    Designation = model.Designation,
-                };
+                return NotFound();
+            }
+            employee.Id = model.Id;
+            employee.FirstName = model.FirstName;
+            employee.LastName = model.LastName;
+            employee.MiddleName = model.MiddleName;
+            employee.EmployeeNo = model.EmployeeNo;
+            employee.FullName = model.FullName;
+            employee.Email = model.Email;
+            employee.Phone = model.Phone;
+            employee.DOB = model.DOB;
+            employee.DateJoined = model.DateJoined;
+            employee.Designation = model.Designation;
+            employee.PaymentMethod = model.PaymentMethod;
+            employee.StudentLoan = model.StudentLoan;
+            employee.NationalInsuranceNo = model.NationalInsuranceNo;
+            employee.UnionMember = model.UnionMember;
+            employee.Address = model.Address;
+            employee.City = model.City;
+            employee.Postcode = model.Postcode;
 
-                if (model.ImageUrl != null && model.ImageUrl.Length > 0)
-                {
+            if (model.ImageUrl != null && model.ImageUrl.Length > 0)
+            {
 
-                    var uploadDir = @"images/employees";
-                    var fileName = Path.GetFileNameWithoutExtension(model.ImageUrl.FileName);
-                    var extension = Path.GetExtension(model.ImageUrl.FileName);
-                    var webRootPath = _webHostEnvironment.WebRootPath;
-                    fileName = DateTime.UtcNow.ToString("yymmssfff") + fileName + extension;
-                    var path = Path.Combine(webRootPath, uploadDir, fileName);
-                    await model.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-                    employee.ImageUrl = "/" + uploadDir + "/" + fileName;
-                    await _employeeService.UpdateAsSync(employee);
-                    return RedirectToAction("Index");
-                }
-
+                var uploadDir = @"images/employees";
+                var fileName = Path.GetFileNameWithoutExtension(model.ImageUrl.FileName);
+                var extension = Path.GetExtension(model.ImageUrl.FileName);
+                var webRootPath = _webHostEnvironment.WebRootPath;
+                fileName = DateTime.UtcNow.ToString("yymmssfff") + fileName + extension;
+                var path = Path.Combine(webRootPath, uploadDir, fileName);
+                await model.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
+                employee.ImageUrl = "/" + uploadDir + "/" + fileName;
+                await _employeeService.UpdateAsSync(employee);
+                return RedirectToAction("Index");
             }
             return View();
         }
+
     }
 }
 

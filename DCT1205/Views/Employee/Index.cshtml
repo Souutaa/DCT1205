@@ -25,9 +25,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
                         @foreach (var item in Model)
                         {
+                        <tr>
+                        
                         <td>@item.EmployeeNo</td>
                         <td>@item.FullName</td>
                         <td>@item.Gender</td>
@@ -48,8 +49,9 @@
                                 <i class="far fa-trash-alt"></i> Delete
                             </a>
                         </td>
-                        }
+                        
                         </tr>
+                        }
                     </tbody>
                 </table>
             </div>
