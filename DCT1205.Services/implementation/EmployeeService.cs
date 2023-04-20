@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace DCT1205.Services.implementation
 {
@@ -60,6 +61,16 @@ namespace DCT1205.Services.implementation
             var employee = GetById(id);
            _context.Employee.Update(employee);
            await _context.SaveChangesAsync();
+        }
+
+        public IEnumerable<SelectListItem> GetAllEmployeesForPayroll()
+        {
+            var ListEmployeeForPay = _context.Employee.Select(e => new SelectListItem
+            {
+                Text = e.FullName,
+                Value = e.Id.ToString()
+            });
+            return ListEmployeeForPay;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace DCT1205.Services
 {
@@ -16,5 +17,6 @@ namespace DCT1205.Services
         Task UpdateById(int id);
         Task DeleteAsSync(int id);
         Task DeleteEmployee(Employee employee);
+        IEnumerable<SelectListItem> GetAllEmployeesForPayroll();
     }
 }

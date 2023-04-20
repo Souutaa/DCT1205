@@ -144,7 +144,7 @@ namespace DCT1205.Controllers
                 await _employeeService.DeleteAsSync(model.Id);
                 return RedirectToAction("Index");
             }
-            return View(model);
+            return View();
         }
 
         [HttpGet]
@@ -179,6 +179,7 @@ namespace DCT1205.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditEmployeeViewModel model)
